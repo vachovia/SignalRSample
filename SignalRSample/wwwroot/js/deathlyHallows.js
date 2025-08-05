@@ -18,7 +18,7 @@ function fulfilled() {
     });
 }
 function rejected(error) {
-    console.error("Error establishing SignalR connection: ", error.toString())
+    console.error("Error establishing SignalR deathly hallows connection: ", error.toString())
 }
 
 // Receive messages from hub when user hits Home Controller Method DeathlyHallows

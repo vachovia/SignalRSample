@@ -46,6 +46,6 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.UseMappedHubs();
+app.UseMappedHubsRoutes();
 
 app.Run();

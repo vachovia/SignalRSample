@@ -5,6 +5,11 @@
     {
       "library": "@microsoft/signalr@latest",
       "destination": "wwwroot/lib/microsoft/signalr/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "toastr.js@2.1.4",
+      "destination": "wwwroot/lib/toastr.js/"
     }
   ]
 }
