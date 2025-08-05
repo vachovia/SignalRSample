@@ -19,7 +19,7 @@ namespace SignalRSample.Hubs
 
         public async Task LoadMessages()
         {
-            await Clients.All.SendAsync("loadNotification", messages, notificationCounter);
+            await Clients.All.SendAsync("loadNotifications", messages, notificationCounter);
         }
     }
 }

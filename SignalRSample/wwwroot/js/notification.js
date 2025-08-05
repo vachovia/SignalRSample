@@ -27,7 +27,7 @@ sendButton.addEventListener("click", function (event) {
     event.preventDefault();
 });
 
-connectionNotification.on("loadNotification", (messages, counter) => {
+connectionNotification.on("loadNotifications", (messages, counter) => {
     const messageList = document.getElementById("messageList");
     const notificationCounter = document.getElementById("notificationCounter");
     messageList.innerHTML = "";
