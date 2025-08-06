@@ -10,6 +10,7 @@ namespace SignalRSample.Middleware
             app.MapHub<DeathlyHallowsHub>("/hubs/deathlyHallows");
             app.MapHub<HouseGroupHub>("/hubs/houseGroup");
             app.MapHub<NotificationHub>("/hubs/notification");
+            app.MapHub<ChatHub>("/hubs/chat");
             return app;
         }
     }
