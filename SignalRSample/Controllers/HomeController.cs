@@ -46,9 +46,9 @@ namespace SignalRSample.Controllers
         }
 
         [ActionName("Order")]
-        public async Task<IActionResult> Order()
+        public IActionResult Order()
         {
-            string[] name = { "Bhrugen", "Ben", "Jess", "Laura", "Ron" };
+            string[] name = { "Sam", "Ben", "Jess", "Laura", "Ron" };
             string[] itemName = { "Food1", "Food2", "Food3", "Food4", "Food5" };
 
             Random rand = new Random();
@@ -59,7 +59,7 @@ namespace SignalRSample.Controllers
             {
                 Name = name[index],
                 ItemName = itemName[index],
-                Count = index
+                Count = index + 1
             };
 
             return View(order);
