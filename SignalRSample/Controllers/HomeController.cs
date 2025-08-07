@@ -11,18 +11,26 @@ namespace SignalRSample.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
-        private readonly IHubContext<DeathlyHallowsHub> _deathlyHallowsHub;        
+        private readonly IHubContext<OrderHub> _orderHub;
+        private readonly IHubContext<DeathlyHallowsHub> _deathlyHallowsHub;
 
-        public HomeController(ILogger<HomeController> logger, IHubContext<DeathlyHallowsHub> deathlyHallowsHub, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IHubContext<DeathlyHallowsHub> deathlyHallowsHub, IHubContext<OrderHub> orderHub)
         {
             _logger = logger;
             _context = context;
+            _orderHub = orderHub;
             _deathlyHallowsHub = deathlyHallowsHub;
         }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         public IActionResult Notification()
@@ -33,6 +41,22 @@ namespace SignalRSample.Controllers
         public IActionResult DeathlyHallowsRace()
         {
             return View();
+        }
+
+        public async Task<IActionResult> DeathlyHallows(string type)
+        {
+            var key = SD.DeathlyHallowRace.ContainsKey(type);
+
+            if (key)
+            {
+                SD.DeathlyHallowRace[type]++;
+            }
+
+            await _deathlyHallowsHub.Clients.All.SendAsync(
+                "updateDeathlyHallowsCount", SD.DeathlyHallowRace[SD.Cloak], SD.DeathlyHallowRace[SD.Stone], SD.DeathlyHallowRace[SD.Wand]
+            );
+
+            return Accepted();
         }
 
         public IActionResult HarryPotterHouse()
@@ -71,7 +95,10 @@ namespace SignalRSample.Controllers
         {
 
             _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+
+            await _orderHub.Clients.All.SendAsync("orderCreated");
+
             return RedirectToAction(nameof(Order));
         }
 
@@ -86,28 +113,6 @@ namespace SignalRSample.Controllers
         {
             var orderList = _context.Orders.ToList();
             return Json(new { data = orderList });
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public async Task<IActionResult> DeathlyHallows(string type)
-        {
-            var key = SD.DeathlyHallowRace.ContainsKey(type);
-
-            if (key)
-            {
-                SD.DeathlyHallowRace[type]++;
-            }
-
-            await _deathlyHallowsHub.Clients.All.SendAsync(
-                "updateDeathlyHallowsCount", SD.DeathlyHallowRace[SD.Cloak], SD.DeathlyHallowRace[SD.Stone], SD.DeathlyHallowRace[SD.Wand]
-            );
-
-            return Accepted();
         }
     }
 }

@@ -1,4 +1,26 @@
-﻿var dataTable;
+﻿
+
+// create connection to the SignalR hub
+const connectionOrder = new signalR.HubConnectionBuilder()
+    .withUrl("/hubs/order").build();
+
+// start the connection
+connectionOrder.start().then(fulfilled, rejected);
+function fulfilled() {
+    console.log("SignalR connection established for order hub.");
+}
+function rejected(error) {
+    console.error("Error establishing SignalR connection: ", error.toString())
+}
+
+// Receive messages from chat hub
+connectionOrder.on("orderCreated", () => {
+    toastr.success("New order received.");
+    dataTable.ajax.reload();
+});
+
+// Load the DataTable when the document is ready
+var dataTable;
 
 function loadDataTable() {
 
